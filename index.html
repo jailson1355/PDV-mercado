@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDV - Supermercado</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f1f5f9;
+            margin: 0;
+            padding: 20px;
+            color: #1e293b;
+        }
+        .pdv-container {
+            display: flex;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .coluna-esquerda {
+            flex: 1;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .coluna-direita {
+            flex: 1;
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        h2 {
+            margin-top: 0;
+            color: #0f172a;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #475569;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            box-sizing: border-box;
+            font-size: 16px;
+            background-color: #f8fafc;
+        }
+        input:focus {
+            outline: none;
+            border-color: #2563eb;
+            background-color: #fff;
+        }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+        .btn-add { background-color: #2563eb; color: white; }
+        .btn-add:hover { background-color: #1d4ed8; }
+        .btn-finalizar { background-color: #16a34a; color: white; }
+        .btn-finalizar:hover { background-color: #15803d; }
+        .btn-fechar { background-color: #eab308; color: #1e293b; }
+        .btn-fechar:hover { background-color: #ca8a04; }
+
+        /* Tabela do Carrinho */
+        .carrinho-titulo {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #1e293b;
+        }
+        .tabela-wrapper {
+            flex: 1;
+            overflow-y: auto;
+            max-height: 300px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #fff;
+        }
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            font-size: 14px;
+        }
+        th { background-color: #f8fafc; color: #64748b; border-bottom: 2px solid #e2e8f0; }
+        tr { border-bottom: 1px solid #f1f5f9; }
+
+        /* Display de Total Grande (Estilo Caixa de Mercado) */
+        .total-caixa {
+            background-color: #0f172a;
+            color: #22c55e;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 36px;
+            text-align: right;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        /* Painel de Fechamento */
+        .fechamento-card {
+            max-width: 1200px;
+            margin: 20px auto 0 auto;
+            background: #fff;
+            border-left: 5px solid #dc3545;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        .item-fechamento {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            font-size: 16px;
+            border-bottom: 1px dashed #f1f5f9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="pdv-container">
+       
+        <!-- COLUNA DA ESQUERDA: ENTRADA DE PRODUTOS -->
+        <div class="coluna-esquerda">
+            <h2>🛒 CAIXA LIVRE</h2>
+           
+            <div class="form-group">
+                <label for="codigo">Código do Produto (Digite 1, 2, 3 ou 4):</label>
+                <input type="text" id="codigo" placeholder="Passe o leitor ou digite o código" onkeyup="buscarProdutoPorCodigo(event)">
+            </div>
+
+            <div class="form-group">
+                <label for="produto_nome">Descrição:</label>
+                <input type="text" id="produto_nome" readonly style="background-color: #e2e8f0;">
+            </div>
+
+            <div class="form-group">
+                <label for="preco_unitario">Preço Unitário (R$):</label>
+                <input type="text" id="preco_unitario" readonly style="background-color: #e2e8f0;">
+            </div>
+
+            <div class="form-group">
+                <label for="quantidade">Quantidade de Itens:</label>
+                <input type="number" id="quantidade" value="1" min="1">
+            </div>
+
+            <button class="btn btn-add" onclick="adicionarAoCarrinho()">INCLUIR ITEM (Enter)</button>
+        </div>
+
+        <!-- COLUNA DA DIREITA: CARRINHO DA COMPRA ATUAL -->
+        <div class="coluna-direita">
+            <div class="carrinho-titulo">LISTA DE COMPRAS</div>
+           
+            <div class="tabela-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Produto</th>
+                            <th>Qtd</th>
+                            <th>Subtotal</th>
+                        </tr>
+                    </thead>
+                    <tbody id="itens-carrinho">
+                        <!-- Itens entram aqui dinamicamente -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="total-caixa" id="total-venda-atual">
+                R$ 0,00
+            </div>
+
+            <div class="form-group" style="margin-top: 15px;">
+                <label for="pagamento">Forma de Pagamento:</label>
+                <select id="pagamento">
+                    <option value="Dinheiro">Dinheiro</option>
+                    <option value="Cartao">Cartão</option>
+                    <option value="PIX">PIX</option>
+                </select>
+            </div>
+
+            <button class="btn btn-finalizar" onclick="finalizarCupom()">PAGAMENTO / FECHAR CUPOM</button>
+            <button class="btn btn-fechar" onclick="fecharCaixaGeral()">FECHAMENTO DE CAIXA DO DIA</button>
+        </div>
+
+    </div>
+
+    <!-- PAINEL DE FECHAMENTO GERAL -->
+    <div class="fechamento-card" id="painel-fechamento" style="display: none;">
+        <h3 style="color: #dc3545; margin-top:0;">📊 RESUMO DE FECHAMENTO DO MERCADO</h3>
+        <div class="item-fechamento"><span>Vendas em Dinheiro:</span><strong style="color: #16a34a;" id="f-dinheiro">R$ 0,00</strong></div>
+        <div class="item-fechamento"><span>Vendas em Cartão:</span><strong style="color: #2563eb;" id="f-cartao">R$ 0,00</strong></div>
+        <div class="item-fechamento"><span>Vendas em PIX:</span><strong style="color: #7c3aed;" id="f-pix">R$ 0,00</strong></div>
+        <div class="item-fechamento" style="font-size: 18px; font-weight: bold; padding-top: 10px;">
+            <span>TOTAL GERAL ARRECADADO:</span><span id="f-total">R$ 0,00</span>
+        </div>
+    </div>
+
+    <script>
+        // Banco de dados simulado de produtos do mercado
+        const produtosCadastrados = {
+            "1": { nome: "Arroz 5kg Premium", preco: 27.90 },
+            "2": { nome: "Feijão Preto 1kg", preco: 8.50 },
+            "3": { nome: "Macarrão Espaguete 500g", preco: 4.25 },
+            "4": { nome: "Óleo de Soja 900ml", preco: 6.80 }
+        };
+
+        let carrinhoAtual = [];
+        let historicoVendasDoDia = []; // Acumula para o fechamento de caixa
+        let contadorItem = 1;
+
+        // Detecta o código digitado
+        function buscarProdutoPorCodigo(event) {
+            const cod = document.getElementById('codigo').value;
+            const produto = produtosCadastrados[cod];
+
+            if (produto) {
+                document.getElementById('produto_nome').value = produto.nome;
+                document.getElementById('preco_unitario').value = produto.preco.toFixed(2).replace('.', ',');
+               
+                // Se apertar Enter no campo de código, já joga o item direto no carrinho igual no mercado
+                if (event.key === "Enter") {
+                    adicionarAoCarrinho();
+                }
+            } else {
+                document.getElementById('produto_nome').value = '';
+                document.getElementById('preco_unitario').value = '';
+            }
+        }
+
+        // Adiciona o produto na lista do cupom atual
+        function adicionarAoCarrinho() {
+            const cod = document.getElementById('codigo').value;
+            const produto = produtosCadastrados[cod];
+            const qtd = parseInt(document.getElementById('quantidade').value) || 0;
+
+            if (!produto || qtd <= 0) {
+                alert("Busque um produto válido e defina a quantidade!");
+                return;
+            }
+
+            const subtotal = produto.preco * qtd;
+
+            carrinhoAtual.push({
+                item_numero: contadorItem,
+                nome: produto.nome,
+                qtd: qtd,
+                subtotal: subtotal
+            });
+
+            // Atualiza tabela visual do carrinho
+            const tabela = document.getElementById('itens-carrinho');
+            const linha = document.createElement('tr');
+            linha.innerHTML = `
+                <td>${contadorItem}</td>
+                <td><strong>${produto.nome}</strong></td>
+                <td>${qtd}x</td>
+                <td>R$ ${subtotal.toFixed(2).replace('.', ',')}</td>
+            `;
+            tabela.appendChild(linha);
+
+            contadorItem++;
+            atualizarTotalVisor();
+
+            // Limpa os campos para o próximo item
+            document.getElementById('codigo').value = '';
+            document.getElementById('produto_nome').value = '';
+            document.getElementById('preco_unitario').value = '';
+            document.getElementById('quantidade').value = '1';
+            document.getElementById('codigo').focus();
+        }
+
+        // Soma o valor total da compra na tela preta
+        function atualizarTotalVisor() {
+            let totalComp = 0;
+            carrinhoAtual.forEach(item => totalComp += item.subtotal);
+            document.getElementById('total-venda-atual').innerText = "R$ " + totalComp.toFixed(2).replace('.', ',');
+        }
+
+        // Fecha a venda do cliente atual
+        function finalizarCupom() {
+            if (carrinhoAtual.length === 0) {
+                alert("O carrinho está vazio! Adicione itens antes de fechar.");
+                return;
+            }
+
+            let totalCupom = 0;
+            carrinhoAtual.forEach(item => totalCupom += item.subtotal);
+            const formaPgto = document.getElementById('pagamento').value;
+
+            // Salva no histórico do dia para o fechamento de caixa posterior
+            historicoVendasDoDia.push({
+                total: totalCupom,
+                pagamento: formaPgto
+            });
+
+            alert(`Cupom Fiscal Emitido!\nTotal: R$ ${totalCupom.toFixed(2).replace('.', ',')}\nForma: ${formaPgto}`);
+
+            // Reseta o Caixa para o próximo cliente do mercado
+            carrinhoAtual = [];
+            contadorItem = 1;
+            document.getElementById('itens-carrinho').innerHTML = '';
+            document.getElementById('total-venda-atual').innerText = "R$ 0,00";
+            document.getElementById('codigo').focus();
+        }
+
+        // Executa o fechamento financeiro de todas as compras salvas
+        function fecharCaixaGeral() {
+            if (historicoVendasDoDia.length === 0) {
+                alert("Nenhum cupom foi fechado hoje!");
+                return;
+            }
+
+            let total = 0, dinheiro = 0, cartao = 0, pix = 0;
+
+            historicoVendasDoDia.forEach(v => {
+                total += v.total;
+                if (v.pagamento === "Dinheiro") dinheiro += v.total;
+                if (v.pagamento === "Cartao") cartao += v.total;
+                if (v.pagamento === "PIX") pix += v.total;
+            });
+
+            document.getElementById('f-dinheiro').innerText = "R$ " + dinheiro.toFixed(2).replace('.', ',');
+            document.getElementById('f-cartao').innerText = "R$ " + cartao.toFixed(2).replace('.', ',');
+            document.getElementById('f-pix').innerText = "R$ " + pix.toFixed(2).replace('.', ',');
+            document.getElementById('f-total').innerText = "R$ " + total.toFixed(2).replace('.', ',');
+
+            document.getElementById('painel-fechamento').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
