@@ -320,9 +320,7 @@
                 pagamento: formaPgto
             });
 
-            alert(`Cupom Fiscal Emitido!\nTotal: R$ ${totalCupom.toFixed(2).replace('.', ',')}\nForma: ${formaPgto}`);
-
-            // Reseta o Caixa para o próximo cliente do mercado
+           imprimirCupom(carrinhoAtual, totalCupom, formaPgto);
             carrinhoAtual = [];
             contadorItem = 1;
             document.getElementById('itens-carrinho').innerHTML = '';
@@ -354,9 +352,12 @@
             document.getElementById('painel-fechamento').style.display = 'block';
         }
 
-       function imprimirCupom(itens, total, formaPagamento) {
+function imprimirCupom(itens, total, formaPagamento) {
+// 1. Abra a janela de impressão na tela
 const janelaImpressao = window.open('', '', 'width=300,height=600');
-let conteudoCuom = `
+
+// 2. Monta o topo do cupom e os estilos de letras
+let conteudoCupom = `
 <html>
 <head>
 <style>
@@ -376,6 +377,7 @@ CUPOM *** FISCAL<br>
 <div><strong>ITENS:</strong></div>
 `;
 
+// 3. O motor que pega cada produto do carrinho e lista no cupom
 itens.forEach(item => {
 conteudoCupom += `
 <div class="item">
@@ -385,6 +387,7 @@ conteudoCupom += `
 `;
 });
 
+// 4. Mostra o total final e a forma de pagamento
 conteudoCupom += `
 <div class="linha"></div>
 <div class="total">
@@ -404,11 +407,13 @@ Volte Sempre!
 </html>
 `;
 
+// 5. Manda rodar a impressora
 janelaImpressao.document.write(conteudoCupom);
 janelaImpressão.document.close();
 janelaImpressão.print();
 janelaImpressão.close();
 }
+
 
     </script>
 </body>
