@@ -353,6 +353,63 @@
 
             document.getElementById('painel-fechamento').style.display = 'block';
         }
+
+       function imprimirCupom(itens, total, formaPagamento) {
+const janelaImpressao = window.open('', '', 'width=300,height=600');
+let conteudoCuom = `
+<html>
+<head>
+<style>
+corpo { família de fontes: 'Courier New', Courier, monoespaçado; tamanho da fonte: 12px; largura: 58mm; margem: 0; preenchimento: 10px; }
+.text-center { alinhamento-texto: centro; }
+.linha { borda inferior: 1px tracejado #000; margem: 5px 0; }
+.item { display: flex; justify-content: space-between; }
+.total { font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="text-center">
+<strong>***MINIMERCADO***</strong><br>
+CUPOM *** FISCAL<br>
+</div>
+<div class="linha"></div>
+<div><strong>ITENS:</strong></div>
+`;
+
+itens.forEach(item => {
+conteudoCupom += `
+<div class="item">
+<span>${item.quantidade}x ${item.nome}</span>
+<span>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</span>
+</div>
+`;
+});
+
+conteudoCupom += `
+<div class="linha"></div>
+<div class="total">
+<span>TOTAL:</span>
+<span>R$ ${total.toFixed(2).replace('.', ',')}</span>
+</div>
+<div class="item">
+<span>PAGAMENTO:</span>
+<span>${formaPagamento}</span>
+</div>
+<div class="linha"></div>
+<div class="text-center">
+Obrigado pela preferência!<br>
+Volte Sempre!
+</div>
+</body>
+</html>
+`;
+
+janelaImpressao.document.write(conteudoCupom);
+janelaImpressão.document.close();
+janelaImpressão.print();
+janelaImpressão.close();
+}
+
     </script>
 </body>
 </html>
