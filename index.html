@@ -224,14 +224,33 @@
 
     <script>
         // Banco de dados simulado de produtos do mercado
-        const produtosCadastrados = {
-            "1": { nome: "Arroz 5kg Premium", preco: 27.90 },
-            "2": { nome: "Feijão Preto 1kg", preco: 8.50 },
-            "3": { nome: "Macarrão Espaguete 500g", preco: 4.25 },
-            "4": { nome: "Óleo de Soja 900ml", preco: 6.80 }
-        };
+    const produtos = [
+    { id: 2, nome: "Arroz Branco 5kg", preco: 24.90 },
+    { id: 3, nome: "Açúcar Refinado 1kg", preco: 4.20 },
+    { id: 4, nome: "Café Torrado 500g", preco: 14.50 },
+    { id: 5, nome: "Óleo de Soja 900ml", preco: 6.80 },
+    { id: 6, nome: "Macarrão Espaguete 500g", preco: 3.50 },
+    { id: 7, nome: "Sal Refinado 1kg", preco: 2.20 },
+    { id: 8, nome: "Farinha de Trigo 1kg", preco: 4.80 },
+    { id: 9, nome: "Leite Integral 1L", preco: 5.49 },
+    { id: 10, nome: "Molho de Tomate Sachê", preco: 1.99 },
+    { id: 11, nome: "Biscoito Recheado 130g", preco: 2.50 },
+    { id: 12, nome: "Refrigerante 2L", preco: 8.90 },
+    { id: 13, nome: "Água Mineral 500ml", preco: 2.00 },
+    { id: 14, nome: "Detergente Líquido 500ml", preco: 2.10 },
+    { id: 15, nome: "Sabão em Pó 800g", preco: 11.90 },
+    { id: 16, nome: "Amaciante de Roupas 2L", preco: 13.80 },
+    { id: 17, nome: "Desinfetante 1L", preco: 4.50 },
+    { id: 18, nome: "Esponja de Aço (Pct c/ 4)", preco: 2.99 },
+    { id: 19, nome: "Sabonete Barra 90g", preco: 1.80 },
+    { id: 20, nome: "Creme Dental 90g", preco: 3.20 },
+    { id: 21, nome: "Papel Higiênico (Leve 12 Pague 11)", preco: 15.50 },
+    { id: 22, nome: "Shampoo Anticaspa 400ml", preco: 16.90 }
+  
+];
+    
 
-        let carrinhoAtual = [];
+        let carrinhoAtual = []; 
         let historicoVendasDoDia = []; // Acumula para o fechamento de caixa
         let contadorItem = 1;
 
