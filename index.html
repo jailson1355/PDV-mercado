@@ -257,7 +257,7 @@
         // Detecta o código digitado
         function buscarProdutoPorCodigo(event) {
             const cod = document.getElementById('codigo').value;
-            const produto = produtosCadastrados[cod];
+            const produto = produtos[cod];
 
             if (produto) {
                 document.getElementById('produto_nome').value = produto.nome;
