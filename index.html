@@ -13,7 +13,7 @@
             color: #1e293b;
         }
         .pdv-container {
-           display: flex;
+            display: flex;
             gap: 20px;
             max-width: 1200px;
             margin: 0 auto;
@@ -109,7 +109,7 @@
         th { background-color: #f8fafc; color: #64748b; border-bottom: 2px solid #e2e8f0; }
         tr { border-bottom: 1px solid #f1f5f9; }
 
-        /* Display de Total Grande (Estilo Caixa de Mercado) */
+        /* Display de Total Grande */
         .total-caixa {
             background-color: #0f172a;
             color: #22c55e;
@@ -144,13 +144,12 @@
 <body>
 
     <div class="pdv-container">
-       
-        <!-- COLUNA DA ESQUERDA: ENTRADA DE PRODUTOS -->
+      
         <div class="coluna-esquerda">
             <h2>🛒 CAIXA LIVRE</h2>
-           
+          
             <div class="form-group">
-                <label for="codigo">Código do Produto (Digite 1, 2, 3 ou 4):</label>
+                <label for="codigo">Código do Produto (Digite de 2 a 22):</label>
                 <input type="text" id="codigo" placeholder="Passe o leitor ou digite o código" onkeyup="buscarProdutoPorCodigo(event)">
             </div>
 
@@ -172,10 +171,9 @@
             <button class="btn btn-add" onclick="adicionarAoCarrinho()">INCLUIR ITEM (Enter)</button>
         </div>
 
-        <!-- COLUNA DA DIREITA: CARRINHO DA COMPRA ATUAL -->
         <div class="coluna-direita">
             <div class="carrinho-titulo">LISTA DE COMPRAS</div>
-           
+          
             <div class="tabela-wrapper">
                 <table>
                     <thead>
@@ -187,8 +185,7 @@
                         </tr>
                     </thead>
                     <tbody id="itens-carrinho">
-                        <!-- Itens entram aqui dinamicamente -->
-                    </tbody>
+                        </tbody>
                 </table>
             </div>
 
@@ -211,7 +208,6 @@
 
     </div>
 
-    <!-- PAINEL DE FECHAMENTO GERAL -->
     <div class="fechamento-card" id="painel-fechamento" style="display: none;">
         <h3 style="color: #dc3545; margin-top:0;">📊 RESUMO DE FECHAMENTO DO MERCADO</h3>
         <div class="item-fechamento"><span>Vendas em Dinheiro:</span><strong style="color: #16a34a;" id="f-dinheiro">R$ 0,00</strong></div>
@@ -223,47 +219,45 @@
     </div>
 
     <script>
-        // Banco de dados simulado de produtos do mercado
-    const produtos = [
-    { id: 2, nome: "Arroz Branco 5kg", preco: 24.90 },
-    { id: 3, nome: "Açúcar Refinado 1kg", preco: 4.20 },
-    { id: 4, nome: "Café Torrado 500g", preco: 14.50 },
-    { id: 5, nome: "Óleo de Soja 900ml", preco: 6.80 },
-    { id: 6, nome: "Macarrão Espaguete 500g", preco: 3.50 },
-    { id: 7, nome: "Sal Refinado 1kg", preco: 2.20 },
-    { id: 8, nome: "Farinha de Trigo 1kg", preco: 4.80 },
-    { id: 9, nome: "Leite Integral 1L", preco: 5.49 },
-    { id: 10, nome: "Molho de Tomate Sachê", preco: 1.99 },
-    { id: 11, nome: "Biscoito Recheado 130g", preco: 2.50 },
-    { id: 12, nome: "Refrigerante 2L", preco: 8.90 },
-    { id: 13, nome: "Água Mineral 500ml", preco: 2.00 },
-    { id: 14, nome: "Detergente Líquido 500ml", preco: 2.10 },
-    { id: 15, nome: "Sabão em Pó 800g", preco: 11.90 },
-    { id: 16, nome: "Amaciante de Roupas 2L", preco: 13.80 },
-    { id: 17, nome: "Desinfetante 1L", preco: 4.50 },
-    { id: 18, nome: "Esponja de Aço (Pct c/ 4)", preco: 2.99 },
-    { id: 19, nome: "Sabonete Barra 90g", preco: 1.80 },
-    { id: 20, nome: "Creme Dental 90g", preco: 3.20 },
-    { id: 21, nome: "Papel Higiênico (Leve 12 Pague 11)", preco: 15.50 },
-    { id: 22, nome: "Shampoo Anticaspa 400ml", preco: 16.90 }
-  
-];
-    
+        // Banco de dados de produtos - Corrigido pontos decimais e estrutura
+        const produtos = [
+            { id: 2, nome: "Arroz Branco 5kg", preco: 24.90 },
+            { id: 3, nome: "Açúcar Refinado 1kg", preco: 4.20 },
+            { id: 4, nome: "Café Torrado 500g", preco: 14.50 },
+            { id: 5, nome: "Óleo de Soja 900ml", preco: 6.80 },
+            { id: 6, nome: "Macarrão Espaguete 500g", preco: 3.50 },
+            { id: 7, nome: "Sal Refinado 1kg", preco: 2.20 },
+            { id: 8, nome: "Farinha de Trigo 1kg", preco: 4.80 },
+            { id: 9, nome: "Leite Integral 1L", preco: 5.49 },
+            { id: 10, nome: "Molho de Tomate Sachê", preco: 1.99 },
+            { id: 11, nome: "Biscoito Recheado 130g", preco: 2.50 },
+            { id: 12, nome: "Refrigerante 2L", preco: 8.90 },
+            { id: 13, nome: "Água Mineral 500ml", preco: 2.00 },
+            { id: 14, nome: "Detergente Líquido 500ml", preco: 2.10 },
+            { id: 15, nome: "Sabão em Pó 800g", preco: 11.90 },
+            { id: 16, nome: "Amaciante de Roupas 2L", preco: 13.80 },
+            { id: 17, nome: "Desinfetante 1L", preco: 4.50 },
+            { id: 18, nome: "Esponja de Aço (Pct c/ 4)", preco: 2.99 },
+            { id: 19, nome: "Sabonete Barra 90g", preco: 1.80 },
+            { id: 20, nome: "Creme Dental 90g", preco: 3.20 },
+            { id: 21, nome: "Papel Higiênico (Leve 12 Pague 11)", preco: 15.50 },
+            { id: 22, nome: "Shampoo Anticaspa 400ml", preco: 16.90 }
+        ];
 
-        let carrinhoAtual = []; 
-        let historicoVendasDoDia = []; // Acumula para o fechamento de caixa
+        let carrinhoAtual = [];
+        let historicoVendasDoDia = [];
         let contadorItem = 1;
 
         // Detecta o código digitado
         function buscarProdutoPorCodigo(event) {
             const cod = document.getElementById('codigo').value;
-            const produto = produtos[cod];
+            // Busca pelo ID correto e real do produto
+            const produto = produtos.find(p => p.id == cod);
 
             if (produto) {
                 document.getElementById('produto_nome').value = produto.nome;
                 document.getElementById('preco_unitario').value = produto.preco.toFixed(2).replace('.', ',');
-               
-                // Se apertar Enter no campo de código, já joga o item direto no carrinho igual no mercado
+              
                 if (event.key === "Enter") {
                     adicionarAoCarrinho();
                 }
@@ -276,7 +270,7 @@
         // Adiciona o produto na lista do cupom atual
         function adicionarAoCarrinho() {
             const cod = document.getElementById('codigo').value;
-            const produto = produtosCadastrados[cod];
+            const produto = produtos.find(p => p.id == cod);
             const qtd = parseInt(document.getElementById('quantidade').value) || 0;
 
             if (!produto || qtd <= 0) {
@@ -333,13 +327,13 @@
             carrinhoAtual.forEach(item => totalCupom += item.subtotal);
             const formaPgto = document.getElementById('pagamento').value;
 
-            // Salva no histórico do dia para o fechamento de caixa posterior
+            // Salva no histórico do dia
             historicoVendasDoDia.push({
                 total: totalCupom,
                 pagamento: formaPgto
             });
 
-           imprimirCupom(carrinhoAtual, totalCupom, formaPgto);
+            imprimirCupom(carrinhoAtual, totalCupom, formaPgto);
             carrinhoAtual = [];
             contadorItem = 1;
             document.getElementById('itens-carrinho').innerHTML = '';
@@ -347,7 +341,7 @@
             document.getElementById('codigo').focus();
         }
 
-        // Executa o fechamento financeiro de todas as compras salvas
+        // Executa o fechamento financeiro
         function fecharCaixaGeral() {
             if (historicoVendasDoDia.length === 0) {
                 alert("Nenhum cupom foi fechado hoje!");
@@ -371,69 +365,62 @@
             document.getElementById('painel-fechamento').style.display = 'block';
         }
 
-function imprimirCupom(itens, total, formaPagamento) {
-// 1. Abra a janela de impressão na tela
-const janelaImpressao = window.open('', '', 'width=300,height=600');
+        function imprimirCupom(itens, total, formaPagamento) {
+            const janelaImpressao = window.open('', '', 'width=300,height=600');
 
-// 2. Monta o topo do cupom e os estilos de letras
-let conteudoCupom = `
-<html>
-<head>
-<style>
-corpo { família de fontes: 'Courier New', Courier, monoespaçado; tamanho da fonte: 12px; largura: 58mm; margem: 0; preenchimento: 10px; }
-.text-center { alinhamento-texto: centro; }
-.linha { borda inferior: 1px tracejado #000; margem: 5px 0; }
-.item { display: flex; justify-content: space-between; }
-.total { font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
-</style>
-</head>
-<body>
-<div class="text-center">
-<strong>***MINIMERCADO***</strong><br>
-CUPOM *** FISCAL<br>
-</div>
-<div class="linha"></div>
-<div><strong>ITENS:</strong></div>
-`;
+            let conteudoCupom = `
+            <html>
+            <head>
+            <style>
+            body { font-family: 'Courier New', Courier, monospace; font-size: 12px; width: 58mm; margin: 0; padding: 10px; }
+            .text-center { text-align: center; }
+            .linha { border-bottom: 1px dashed #000; margin: 5px 0; }
+            .item { display: flex; justify-content: space-between; }
+            .total { font-weight: bold; font-size: 14px; display: flex; justify-content: space-between; }
+            </style>
+            </head>
+            <body>
+            <div class="text-center">
+            <strong>*** MINIMERCADO ***</strong><br>
+            CUPOM NÃO FISCAL<br>
+            </div>
+            <div class="linha"></div>
+            <div><strong>ITENS:</strong></div>
+            `;
 
-// 3. O motor que pega cada produto do carrinho e lista no cupom
-itens.forEach(item => {
-conteudoCupom += `
-<div class="item">
-<span>${item.quantidade}x ${item.nome}</span>
-<span>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</span>
-</div>
-`;
-});
+            itens.forEach(item => {
+                conteudoCupom += `
+                <div class="item">
+                <span>${item.qtd}x ${item.nome}</span>
+                <span>R$ ${item.subtotal.toFixed(2).replace('.', ',')}</span>
+                </div>
+                `;
+            });
 
-// 4. Mostra o total final e a forma de pagamento
-conteudoCupom += `
-<div class="linha"></div>
-<div class="total">
-<span>TOTAL:</span>
-<span>R$ ${total.toFixed(2).replace('.', ',')}</span>
-</div>
-<div class="item">
-<span>PAGAMENTO:</span>
-<span>${formaPagamento}</span>
-</div>
-<div class="linha"></div>
-<div class="text-center">
-Obrigado pela preferência!<br>
-Volte Sempre!
-</div>
-</body>
-</html>
-`;
+            conteudoCupom += `
+            <div class="linha"></div>
+            <div class="total">
+            <span>TOTAL:</span>
+            <span>R$ ${total.toFixed(2).replace('.', ',')}</span>
+            </div>
+            <div class="item">
+            <span>PAGAMENTO:</span>
+            <span>${formaPagamento}</span>
+            </div>
+            <div class="linha"></div>
+            <div class="text-center">
+            Obrigado pela preferência!<br>
+            Volte Sempre!
+            </div>
+            </body>
+            </html>
+            `;
 
-// 5. Manda rodar a impressora
-janelaImpressao.document.write(conteudoCupom);
-janelaImpressão.document.close();
-janelaImpressão.print();
-janelaImpressão.close();
-}
-
-
+            janelaImpressao.document.write(conteudoCupom);
+            janelaImpressao.document.close();
+            janelaImpressao.print();
+            janelaImpressao.close();
+        }
     </script>
 </body>
 </html>
