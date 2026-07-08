@@ -149,7 +149,7 @@
             <h2>🛒 CAIXA LIVRE</h2>
           
             <div class="form-group">
-                <label for="codigo">Código do Produto (Digite de 2 a 22):</label>
+                <label for="codigo">Código do Produto (Digite de 1 a 22):</label>
                 <input type="text" id="codigo" placeholder="Passe o leitor ou digite o código" onkeyup="buscarProdutoPorCodigo(event)">
             </div>
 
@@ -221,6 +221,7 @@
     <script>
         // Banco de dados de produtos - Corrigido pontos decimais e estrutura
         const produtos = [
+            { id: 1, nome: "Feijao Carioca 1kg" , preco: 7.90},  
             { id: 2, nome: "Arroz Branco 5kg", preco: 24.90 },
             { id: 3, nome: "Açúcar Refinado 1kg", preco: 4.20 },
             { id: 4, nome: "Café Torrado 500g", preco: 14.50 },
